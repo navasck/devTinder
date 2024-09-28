@@ -1,6 +1,9 @@
 const mongoose = require('mongoose');
+// For validating data (email, URL, etc.).
 const validator = require('validator');
+// For generating JSON Web Tokens (JWTs) for authentication.
 const jwt = require('jsonwebtoken');
+// For securely hashing passwords.
 const bcrypt = require('bcrypt');
 
 const userSchema = new mongoose.Schema(
@@ -72,5 +75,32 @@ const userSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+// Generates a JWT token that can be used for user authentication.
+// Signs the token using a secret key ('DEV@Tinder$790') and an expiration time ('7d').
+userSchema.methods.getJWT = async function () {
+  const user = this;
+
+  const token = await jwt.sign({ _id: user._id }, 'DEV@Tinder$790', {
+    expiresIn: '7d',
+  });
+
+  return token;
+};
+
+// Compares a provided password input by the user with the hashed password stored in the database.
+// Uses bcrypt.compare to securely perform the comparison.
+
+userSchema.methods.validatePassword = async function (passwordInputByUser) {
+  const user = this;
+  const passwordHash = user.password;
+
+  const isPasswordValid = await bcrypt.compare(
+    passwordInputByUser,
+    passwordHash
+  );
+
+  return isPasswordValid;
+};
 
 module.exports = mongoose.model('User', userSchema);
