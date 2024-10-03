@@ -81,6 +81,9 @@ const userSchema = new mongoose.Schema(
 userSchema.methods.getJWT = async function () {
   const user = this;
 
+  // 1- This object contains the payload of the token, which in this case is the user's _id.
+  //     The payload of the JWT contains information about the user
+  // 2- 'DEV@Tinder$790': This is the secret key used to sign the token. It should be kept confidential.
   const token = await jwt.sign({ _id: user._id }, 'DEV@Tinder$790', {
     expiresIn: '7d',
   });

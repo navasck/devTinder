@@ -1,9 +1,16 @@
 const express = require('express');
+// Import necessary modules
+const crypto = require('crypto');
+const nodemailer = require('nodemailer');
+const bcrypt = require('bcrypt');
 const profileRouter = express.Router();
 
 // for checking authorized or not
 const { userAuth } = require('../middlewares/auth');
-const { validateEditProfileData } = require('../utils/validation');
+const {
+  validateEditProfileData,
+  validateResetPasswordData,
+} = require('../utils/validation');
 
 profileRouter.get('/profile/view', userAuth, async (req, res) => {
   try {
@@ -37,6 +44,35 @@ profileRouter.patch('/profile/edit', userAuth, async (req, res) => {
       message: `${loggedInUser.firstName}, your profile updated successfuly`,
       data: loggedInUser,
     });
+  } catch (err) {
+    res.status(400).send('ERROR : ' + err.message);
+  }
+});
+
+profileRouter.patch('/profile/password', userAuth, async (req, res) => {
+  try {
+    // Validate the request data
+    if (!validateResetPasswordData(req)) {
+      throw new Error('Invalid Reset Password Request');
+    }
+
+    const { oldPassword, newPassword } = req.body;
+
+    // Get the logged-in user
+    const user = req.user;
+
+    // Verify the old password
+    const isPasswordValid = await user.validatePassword(oldPassword);
+
+    if (!isPasswordValid) {
+      throw new Error('Invalid old password');
+    }
+
+    // Update the user's password
+    user.password = await bcrypt.hash(newPassword, 10);
+    await user.save();
+
+    res.json({ message: 'Password updated successfully' });
   } catch (err) {
     res.status(400).send('ERROR : ' + err.message);
   }

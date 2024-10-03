@@ -29,7 +29,24 @@ const validateEditProfileData = (req) => {
   return isEditAllowed;
 };
 
+const validateResetPasswordData = (req) => {
+  const { emailId, oldPassword, newPassword } = req.body;
+
+  if (!emailId || !oldPassword || !newPassword) {
+    throw new Error('Missing required fields');
+  }
+
+  // Additional validation checks can be added here, such as:
+  // - Data type validation
+  // - Length validation
+  // - Password complexity validation
+  // - Email format validation
+
+  return true;
+};
+
 module.exports = {
   validateSignUpData,
   validateEditProfileData,
+  validateResetPasswordData,
 };
