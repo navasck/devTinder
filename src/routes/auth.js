@@ -51,7 +51,7 @@ authRouter.post('/signup', async (req, res) => {
 authRouter.post('/login', async (req, res) => {
   try {
     const { emailId, password } = req.body;
-    // Finds the user by email using User.findOne.
+    // Finds the user from database by email using User.findOne .
     const user = await User.findOne({ emailId: emailId });
     if (!user) {
       throw new Error('Invalid credentials');
@@ -64,7 +64,7 @@ authRouter.post('/login', async (req, res) => {
       const token = await user.getJWT();
 
       // Sets a cookie named token with the generated JWT and an expiration time of 8 hours.
-
+      // whenever logines,  a new cookie is created by the server and given into the client.
       res.cookie('token', token, {
         expires: new Date(Date.now() + 8 * 3600000),
       });
@@ -79,6 +79,7 @@ authRouter.post('/login', async (req, res) => {
 });
 
 authRouter.post('/logout', async (req, res) => {
+  // just setting cookie token as null, and expiry time as current time
   res.cookie('token', null, {
     expires: new Date(Date.now()),
   });
