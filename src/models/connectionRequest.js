@@ -32,3 +32,10 @@ const ConnectionRequestModel = new mongoose.model(
 );
 
 module.exports = ConnectionRequestModel;
+
+
+
+// type: mongoose.Schema.Types.ObjectId  - mongodb _id type
+
+// enum - This specifies the allowed values for the particular field.
+  // you can search with enum custom error messages in mongoose doc
