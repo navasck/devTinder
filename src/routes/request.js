@@ -25,7 +25,7 @@ requestRouter.post(
           .status(400)
           .json({ message: 'Invalid status type: ' + status });
       }
-
+      // checking toUserId is a valid user in our database
       const toUser = await User.findById(toUserId);
       if (!toUser) {
         return res.status(404).json({ message: 'User not found!' });
@@ -67,3 +67,9 @@ requestRouter.post(
 );
 
 module.exports = requestRouter;
+
+
+
+// Role of Indexes in MongoDB
+
+// Indexes in MongoDB are crucial for improving query performance, especially when dealing with large datasets. They act as lookup tables, allowing MongoDB to quickly locate specific documents based on the values of specified fields.
