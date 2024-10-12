@@ -68,3 +68,13 @@ module.exports = ConnectionRequestModel;
 
 // enum - This specifies the allowed values for the particular field.
   // you can search with enum custom error messages in mongoose doc
+
+
+
+  // ref
+
+  // In MongoDB, a ref field is used to establish a reference between two documents in different collections. This is particularly useful for representing relationships between entities, such as one-to-one, one-to-many, or many-to-many relationships.
+
+  // ref: 'User', - reference to the User collection, u just need to add populate from your api
+  // .populate('fromUserId', ['firstName', 'lastName']);
+  // This query is used to populate the fromUserId field in a document with the corresponding details from the users collection.
