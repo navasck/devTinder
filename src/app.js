@@ -7,6 +7,8 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
+require('./utils/cronjob');
+// const { sendOtp, sendUserDetailsEmail } = require('./utils/sendMail');
 
 app.use(
   cors({
