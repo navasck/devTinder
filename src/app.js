@@ -7,7 +7,7 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
-require('./utils/cronjob');
+// require('./utils/cronjob');
 // const { sendOtp, sendUserDetailsEmail } = require('./utils/sendMail');
 
 app.use(
@@ -38,13 +38,13 @@ const authRouter = require('./routes/auth');
 const profileRouter = require('./routes/profile');
 const requestRouter = require('./routes/request');
 const userRouter = require('./routes/user');
-const paymentRouter = require('./routes/payment');
+// const paymentRouter = require('./routes/payment');
 
 app.use('/', authRouter);
 app.use('/', profileRouter);
 app.use('/', requestRouter);
 app.use('/', userRouter);
-app.use('/', paymentRouter);
+// app.use('/', paymentRouter);
 
 connectDB()
   .then(() => {
