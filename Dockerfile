@@ -14,7 +14,7 @@ RUN npm install
 COPY . .
 
 # Expose the application port
-EXPOSE 7777
+EXPOSE 7778
 
 # Start the Node.js app
-CMD ["npn", "run", "start"]
+CMD ["npm", "run", "start"]
