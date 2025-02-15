@@ -17,4 +17,4 @@ COPY . .
 EXPOSE 7778
 
 # Start the Node.js app
-CMD ["npm", "run", "start"]
+CMD ["node", "src/app.js"]
