@@ -7,12 +7,20 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
+// require('./utils/sendSMS');
+
 // require('./utils/cronjob');
 // const { sendOtp, sendUserDetailsEmail } = require('./utils/sendMail');
 
+// app.use(
+//   cors({
+//     origin: 'http://localhost:5173',
+//     credentials: true,
+//   })
+// );
 app.use(
   cors({
-    origin: 'http://localhost:5173',
+    origin: ['http://localhost:5173', 'https://devpulse.live'], // Array of allowed origins
     credentials: true,
   })
 );
@@ -33,6 +41,8 @@ app.use(limiter);
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
+
+
 
 const authRouter = require('./routes/auth');
 const profileRouter = require('./routes/profile');
