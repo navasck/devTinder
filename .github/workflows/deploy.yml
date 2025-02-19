@@ -1,0 +1,56 @@
+name: Docker Build and Push
+on:
+  push:
+    branches: [ main ] # Or any other branch you want to trigger on
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-push:
+    runs-on: self-hosted
+
+    # Required permissions for GitHub Actions to interact with Docker Hub
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+        with:
+          driver-opts: image=moby/buildkit:v0.11.1-rootless # Use a specific version for better control
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          registry: docker.io # Or docker.io for Docker Hub
+          username: ${{ secrets.DOCKER_USERNAME }}  # Use secrets!
+          password: ${{ secrets.DOCKER_PASSWORD }}  # Use secrets!
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: . # Path to your Dockerfile (usually the root of the repo)
+          file: ./Dockerfile # Path to your Dockerfile (if it's not in the root)
+          push: true
+          tags: navasck/devTinder/devtinder-node:latest # Replace with your image name and tag.  For Docker Hub: your-dockerhub-username/your-repo-name:latest
+          # For multi-architecture builds (optional):
+          # platforms: linux/amd64,linux/arm64
+          # build-args: |
+          #   BUILD_VERSION=v1.2.3  # Example build argument
+
+      - name: Image digest
+        if: ${{ always() }}
+        run: |
+          echo "Image digest: ${{ steps.build-and-push.outputs.digest }}"
+
+      - name: Deploy to EC2  # Correct indentation - This is now a separate step
+        run: |
+          docker pull navasck/devTinder/devtinder-node:latest # Corrected image name
+          docker-compose down  # Or docker stop <container_name> && docker rm <container_name>
+          docker-compose up -d --build  # Or docker run -d -p <port_mapping> <image_name>
+
+          # Alternative using docker stack deploy (for Docker Swarm, if applicable):
+          # docker stack deploy -c docker-compose.yml my-stack
